@@ -1,6 +1,9 @@
 package com.gildedrose;
 
 class GildedRose {
+
+    private static int QUALITY_BOUND = 50;
+
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -21,24 +24,26 @@ class GildedRose {
     }
 
     private Item updateAgedBried(Item item) {
-        item.quality = increaseQualityBelowThreshold(item.quality);
+        item.quality = boundedIncrement(item.quality, QUALITY_BOUND);
+
         item.sellIn = item.sellIn - 1;
+
         if (item.sellIn < 0) {
-            item.quality = increaseQualityBelowThreshold(item.quality);
+            item.quality = boundedIncrement(item.quality, QUALITY_BOUND);
         }
 
         return item;
     }
 
     private Item updateBackstagePasses(Item item) {
-        item.quality = increaseQualityBelowThreshold(item.quality);
+        item.quality = boundedIncrement(item.quality, QUALITY_BOUND);
 
         if (item.sellIn < 11) {
-            item.quality = increaseQualityBelowThreshold(item.quality);
+            item.quality = boundedIncrement(item.quality, QUALITY_BOUND);
         }
 
         if (item.sellIn < 6) {
-            item.quality = increaseQualityBelowThreshold(item.quality);
+            item.quality = boundedIncrement(item.quality, QUALITY_BOUND);
         }
 
         item.sellIn = item.sellIn - 1;
@@ -54,20 +59,22 @@ class GildedRose {
     }
 
     private Item updateGeneralItem(Item item) {
-        if (item.quality > 0)
-            item.quality = item.quality - 1;
+        item.quality = zeroBoundedDecrement(item.quality);
+
         item.sellIn = item.sellIn - 1;
-        if (item.sellIn < 0 && item.quality > 0) {
-            item.quality = item.quality - 1;
+
+        if (item.sellIn < 0) {
+            item.quality = zeroBoundedDecrement(item.quality);
         }
+
         return item;
     }
 
-    private int increaseQualityBelowThreshold(int quality) {
-        if (quality < 50)
-            return quality + 1;
-        else
-            return quality;
+    private int boundedIncrement(int value, int QUALITY_BOUND) {
+        return value < QUALITY_BOUND ? value + 1 : value;    }
+
+    private int zeroBoundedDecrement(int value) {
+        return value > 0 ? value - 1 : value;
     }
 
 }
