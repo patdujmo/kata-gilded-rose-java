@@ -15,42 +15,43 @@ class GildedRose {
     }
 
     public void updateQuality() {
-
         for (int i = 0; i < items.length; i++) {
-
-            items[i] = switch (items[i].name) {
-                case ITEM_AGED_BRIE -> updateAgedBried(items[i]);
-                case ITEM_BACKSTAGE_PASSES -> updateBackstagePasses(items[i]);
-                case ITEM_SULFURAS -> updateSulfuras(items[i]);
-                default -> updateGeneralItem(items[i]);
-            };
+            items[i] = updateItem(items[i]);
         }
     }
 
-    private Item updateAgedBried(Item item) {
+    private Item updateItem(Item item) {
+        return switch (item.name) {
+            case ITEM_AGED_BRIE -> updateAgedBrie(item);
+            case ITEM_BACKSTAGE_PASSES -> updateBackstagePasses(item);
+            case ITEM_SULFURAS -> updateSulfuras(item);
+            default -> updateGeneralItem(item);
+        };
+    }
+
+    private Item updateAgedBrie(Item item) {
         item.sellIn = item.sellIn - 1;
 
-        if (item.sellIn < 0) {
-            item.quality = boundedAddition(item.quality, 2, QUALITY_BOUND);
+        if (isExpired(item)) {
+            item.quality = upperBoundedAddition(item.quality, 2, QUALITY_BOUND);
         } else {
-            item.quality = boundedAddition(item.quality, 1, QUALITY_BOUND);
+            item.quality = upperBoundedAddition(item.quality, 1, QUALITY_BOUND);
         }
 
         return item;
     }
 
     private Item updateBackstagePasses(Item item) {
-
         item.sellIn = item.sellIn - 1;
 
-        if (item.sellIn < 0) {
+        if (isExpired(item)) {
             item.quality = 0;
         } else if (item.sellIn < 5) {
-            item.quality = boundedAddition(item.quality, 3, QUALITY_BOUND);
+            item.quality = upperBoundedAddition(item.quality, 3, QUALITY_BOUND);
         } else if (item.sellIn < 10) {
-            item.quality = boundedAddition(item.quality, 2, QUALITY_BOUND);
+            item.quality = upperBoundedAddition(item.quality, 2, QUALITY_BOUND);
         } else {
-            item.quality = boundedAddition(item.quality, 1, QUALITY_BOUND);
+            item.quality = upperBoundedAddition(item.quality, 1, QUALITY_BOUND);
         }
 
         return item;
@@ -65,19 +66,22 @@ class GildedRose {
 
         item.quality = zeroBoundedDecrement(item.quality);
 
-        if (item.sellIn < 0) {
+        if (isExpired(item)) {
             item.quality = zeroBoundedDecrement(item.quality);
         }
 
         return item;
     }
 
-    private int boundedAddition(int a, int b, int upperBound) {
-        return a + b < upperBound ? a + b : upperBound;
+    private boolean isExpired(Item item) {
+        return item.sellIn < 0;
+    }
+
+    private int upperBoundedAddition(int base, int offset, int upperBound) {
+        return base >= upperBound ? base : Integer.min(base + offset, upperBound);
     }
 
     private int zeroBoundedDecrement(int value) {
-        return value > 0 ? value - 1 : value;
+        return value <= 0 ? value : value - 1;
     }
-
 }
