@@ -3,9 +3,9 @@ package com.gildedrose;
 import java.util.Arrays;
 
 class GildedRose {
-    private final String CONTENT_1 = "Aged Brie";
-    private final String CONTENT_2 = "Backstage passes to a TAFKAL80ETC concert";
-    private final String CONTENT_3 = "Sulfuras, Hand of Ragnaros";
+    private final String AGED_BRIE = "Aged Brie";
+    private final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
+    private final String SULFURAS = "Sulfuras, Hand of Ragnaros";
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -19,31 +19,31 @@ class GildedRose {
     }
 
     private Item tempUpdateItem(Item item) {
-        if (!item.name.equals(CONTENT_1)
-                && !item.name.equals(CONTENT_2)) {
+        if (!item.name.equals(AGED_BRIE)
+                && !item.name.equals(BACKSTAGE_PASSES)) {
             if (item.quality > 0) {
-                if (!item.name.equals(CONTENT_3)) {
+                if (!item.name.equals(SULFURAS)) {
                     item.quality = decreaseByOne(item.quality);
                 }
             }
         } else {
             if (item.quality < 50) {
                 item.quality = increaseByOne(item.quality);
-                if (item.name.equals(CONTENT_2)) {
+                if (item.name.equals(BACKSTAGE_PASSES)) {
                     updateBackstagePasses(item);
                 }
             }
         }
 
-        if (!item.name.equals(CONTENT_3)) {
+        if (!item.name.equals(SULFURAS)) {
             item.sellIn = decreaseByOne(item.sellIn);
         }
 
         if (isExpired(item)) {
-            if (!item.name.equals(CONTENT_1)) {
-                if (!item.name.equals(CONTENT_2)) {
+            if (!item.name.equals(AGED_BRIE)) {
+                if (!item.name.equals(BACKSTAGE_PASSES)) {
                     if (item.quality > 0) {
-                        if (!item.name.equals(CONTENT_3)) {
+                        if (!item.name.equals(SULFURAS)) {
                             item.quality = decreaseByOne(item.quality);
                         }
                     }
@@ -59,9 +59,9 @@ class GildedRose {
 
     private Item updateItem(Item item) {
         return switch (item.name) {
-            case CONTENT_1 -> updateAgedBrie(item);
-            case CONTENT_2 -> updateBackstagePasses(item);
-            case CONTENT_3 -> updateSulfuras(item);
+            case AGED_BRIE -> updateAgedBrie(item);
+            case BACKSTAGE_PASSES -> updateBackstagePasses(item);
+            case SULFURAS -> updateSulfuras(item);
             default -> item;
         };
     }
