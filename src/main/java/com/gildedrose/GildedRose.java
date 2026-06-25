@@ -86,10 +86,6 @@ class GildedRose {
         return item;
     }
 
-    private Item updateOtherStuff(Item item) {
-        return item;
-    }
-
     private Item increaseQualityUnder50(Item item) {
         if (item.quality < 50) {
             item.quality = increaseByOne(item.quality);
