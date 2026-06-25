@@ -48,7 +48,7 @@ class GildedRose {
                         }
                     }
                 } else {
-                    item.quality = item.quality - item.quality;
+                    item.quality = 0;
                 }
             } else {
                 increaseQualityUnder50(item);
@@ -62,7 +62,7 @@ class GildedRose {
             case CONTENT_1 -> updateAgedBrie(item);
             case CONTENT_2 -> updateBackstagePasses(item);
             case CONTENT_3 -> updateSulfuras(item);
-            default -> updateOtherStuff(item);
+            default -> item;
         };
     }
 
